@@ -4,22 +4,15 @@ from enum import Enum
 
 os.chdir('./day-6/')
 
-class Operator(Enum):
-    ADDITION = 1
-    SUBTRACTION = 2
-    MULTIPLICATION = 3
-    DIVISION = 4
-
 class Problem:
     
-    def __init__(self, operands: list[int], operator: Operator) -> None:
+    def __init__(self, operands: list[int], operator: str) -> None:
         
         if len(operands) < 2:
             raise ValueError("Requires at least two operands.")
         
         self.operands = operands
         self.operator = operator
-        print(operands, operator, self.result())
     
     def result(self) -> int:
         
@@ -27,13 +20,13 @@ class Problem:
 
         for operand in self.operands[1:]:
             match self.operator:
-                case Operator.ADDITION:
+                case '+':
                     result += operand
-                case Operator.SUBTRACTION:
+                case '-':
                     result -= operand
-                case Operator.MULTIPLICATION:
+                case '*':
                     result *= operand
-                case Operator.DIVISION:
+                case '/':
                     result //= operand
                 case _:
                     result += operand
@@ -62,13 +55,18 @@ def is_end_of_problem(tokens: list[str]) -> bool:
     return all([token[-1] == ' ' for token in tokens])
 
 def generate_problem(tokens: list[str]) -> Problem:
-
-    op_map: dict[str, Operator] = {'+': Operator.ADDITION,
-                                   '-': Operator.SUBTRACTION,
-                                   '*': Operator.MULTIPLICATION,
-                                   '/': Operator.DIVISION}
     
-    return Problem([int(token.strip()) for token in tokens[:-1]], op_map[tokens[-1].strip()])
+    # transpose and reverse tokens (cephaloid math format)
+    operands: list[str] = [''.join([row[col_index] for row in tokens[:-1]]) for col_index in range(len(tokens[0]))]
+    operands = [operand.strip() for operand in operands if operand.strip() != '']
+    # Only addition and multiplication were in this cephaloid's homework, so reversing
+    # operands doesn't actually matter. But we do it for soundness, since cephaloids
+    # read the problem right-to-left and it would matter if non-commutative operations
+    # were presented in the future.
+    operands.reverse()
+    operator: str = tokens[-1].strip()
+    print(operands, operator)
+    return Problem([int(operand) for operand in operands], operator)
 
 def main() -> None:
     
