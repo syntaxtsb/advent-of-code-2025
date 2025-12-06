@@ -56,13 +56,13 @@ def is_end_of_problem(tokens: list[str]) -> bool:
 
 def generate_problem(tokens: list[str]) -> Problem:
     
-    # transpose and reverse tokens (cephaloid math format)
+    # transpose and reverse tokens (cephalopod math format)
     operands: list[str] = [''.join([row[col_index] for row in tokens[:-1]]) for col_index in range(len(tokens[0]))]
     operands = [operand.strip() for operand in operands if operand.strip() != '']
-    # Only addition and multiplication were in this cephaloid's homework, so reversing
-    # operands doesn't actually matter. But we do it for soundness, since cephaloids
+    # Only addition and multiplication were in this cephalopod's homework, so reversing
+    # operands doesn't actually matter. But we do it for completeness, since cephalopods
     # read the problem right-to-left and it would matter if non-commutative operations
-    # were presented in the future.
+    # were present in the input.
     operands.reverse()
     operator: str = tokens[-1].strip()
     print(operands, operator)
